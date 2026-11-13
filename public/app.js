@@ -1,4 +1,4 @@
-import { installedMapLink, iosMapAppLinks } from './map-links.js';
+import { installedMapLink, iosMapAppLinks, shouldShowMapChoices } from './map-links.js?v=3';
 
 const section = document.querySelector('#festival-section');
 const list = document.querySelector('#festival-list');
@@ -49,7 +49,7 @@ async function loadFestivals() {
       const arrow = document.createElement('span'); arrow.className = 'card-arrow'; arrow.textContent = '↗'; arrow.setAttribute('aria-hidden', 'true');
       button.append(shade, badge, title, period, arrow);
       button.addEventListener('click', () => {
-        if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) openMapChoice(festival);
+        if (shouldShowMapChoices(navigator.userAgent, window.matchMedia('(pointer: coarse)').matches)) openMapChoice(festival);
         else window.location.href = installedMapLink(festival, navigator.userAgent);
       });
       return button;
