@@ -30,3 +30,7 @@ export function iosMapAppLinks(festival, origin) {
   ];
 }
 
+export function shouldShowMapChoices(userAgent, coarsePointer = false) {
+  return /iPhone|iPad|iPod|Android|Mobile|KAKAOTALK/i.test(userAgent) || coarsePointer;
+}
+
