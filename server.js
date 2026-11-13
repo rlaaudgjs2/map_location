@@ -19,11 +19,11 @@ const server = http.createServer(async (request, response) => {
     }
     return;
   }
-  const asset = assets[request.url];
+  const asset = assets[new URL(request.url, 'http://localhost').pathname];
   if (!asset) { response.writeHead(404); response.end(); return; }
   try {
     const body = await readFile(path.join(root, asset[0]));
-    response.writeHead(200, { 'Content-Type': asset[1] }); response.end(body);
+    response.writeHead(200, { 'Content-Type': asset[1], 'Cache-Control': 'no-store' }); response.end(body);
   } catch { response.writeHead(500); response.end(); }
 });
 
