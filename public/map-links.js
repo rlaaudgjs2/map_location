@@ -14,3 +14,19 @@ export function installedMapLink(festival, userAgent = '') {
   return `https://map.naver.com/p/search/${encodeURIComponent(festival.addr1)}`;
 }
 
+export function iosMapAppLinks(festival, origin) {
+  const appname = encodeURIComponent(origin);
+  if (festival.mapy != null && festival.mapx != null) {
+    const coords = `${festival.mapy},${festival.mapx}`;
+    return [
+      ['카카오맵 앱', `kakaomap://look?p=${coords}`],
+      ['네이버지도 앱', `nmap://place?lat=${festival.mapy}&lng=${festival.mapx}&name=${encodeURIComponent(festival.title)}&appname=${appname}`]
+    ];
+  }
+  const address = encodeURIComponent(festival.addr1);
+  return [
+    ['카카오맵 앱', `kakaomap://search?q=${address}`],
+    ['네이버지도 앱', `nmap://search?query=${address}&appname=${appname}`]
+  ];
+}
+
