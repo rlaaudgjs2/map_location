@@ -1,5 +1,10 @@
 {
   "framework": null,
-  "outputDirectory": "public"
+  "outputDirectory": "public",
+  "headers": [
+    { "source": "/", "headers": [{ "key": "Cache-Control", "value": "no-store" }] },
+    { "source": "/app.js", "headers": [{ "key": "Cache-Control", "value": "no-store" }] },
+    { "source": "/map-links.js", "headers": [{ "key": "Cache-Control", "value": "no-store" }] }
+  ]
 }
 
