@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { fetchFestivals, selectFestivals, seoulToday, shiftDate } from '../festival.js';
-import { installedMapLink } from '../public/map-links.js';
+import { installedMapLink, iosMapAppLinks } from '../public/map-links.js';
 
 const event = (id, start, end, extra = {}) => ({ contentid: String(id), title: `행사 ${id}`, eventstartdate: start, eventenddate: end, mapx: '127.3845', mapy: '36.3504', ...extra });
 
@@ -72,5 +72,16 @@ test('installed map URI receives latitude then longitude, or searches by address
   const fallback = installedMapLink({ title: '대전 축제', mapy: null, mapx: null, addr1: '대전광역시 중구' }, 'Android');
   assert.ok(fallback.includes(encodeURIComponent('대전광역시 중구')));
   assert.ok(installedMapLink({ title: '대전 축제', mapy: null, mapx: null, addr1: '대전광역시 중구' }, 'Windows').includes(encodeURIComponent('대전광역시 중구')));
+});
+
+test('iPhone app choices use festival coordinates and the current web origin', () => {
+  const festival = { title: '대전 축제', mapy: 36.3504, mapx: 127.3845 };
+  const links = iosMapAppLinks(festival, 'https://map-location.vercel.app');
+  assert.equal(links.length, 2);
+  assert.equal(links[0][1], 'kakaomap://look?p=36.3504,127.3845');
+  assert.match(links[1][1], /^nmap:\/\/place\?lat=36\.3504&lng=127\.3845/);
+  assert.ok(links[1][1].includes('appname=https%3A%2F%2Fmap-location.vercel.app'));
+  const fallback = iosMapAppLinks({ title: '대전 축제', mapy: null, mapx: null, addr1: '대전광역시 중구' }, 'https://map-location.vercel.app');
+  assert.ok(fallback.every(([, url]) => url.includes(encodeURIComponent('대전광역시 중구'))));
 });
 
